@@ -1,3 +1,4 @@
+#该脚本有一点小问题，对应关系处理有误
 import pandas
 import pandas as pd
 # 创建uniref和k的关系字典
