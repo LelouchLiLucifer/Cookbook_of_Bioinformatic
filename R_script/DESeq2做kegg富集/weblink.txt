@@ -1,0 +1,2 @@
+https://www.jianshu.com/p/8fb945001e21
+DESeq2做kegg富集。这次不提供参考代码，自由发挥。
