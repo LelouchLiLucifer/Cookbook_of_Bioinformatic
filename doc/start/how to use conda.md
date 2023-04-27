@@ -18,8 +18,8 @@ conda 是一种创建和管理虚拟环境的工具，用conda创建一个环境
 
 这样，我们就创建了一个名叫“麻辣烫”的环境，然而现在的麻辣烫还只是原味的，我们没有备注要不要香菜和葱花，因此，我们加入一些内容:
 
-> conda create --name 麻辣烫 python=4.10  
-
+> conda create --name 麻辣烫 python=4.10
+> 
 > conda create --name 麻辣烫 R=3.6.0 
 > 
 > conda create --name 麻辣烫 python=4.10 R=3.6.0 
