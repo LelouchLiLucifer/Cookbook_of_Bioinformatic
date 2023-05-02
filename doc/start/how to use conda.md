@@ -40,33 +40,7 @@ conda 是一种创建和管理虚拟环境的工具，用conda创建一个环境
 
 这是一个基础的安装“肉丸”这个软件的命令 
 
-当然，和众多linux命令一样，这个安装命令可用添加参数，虽然大多数时候不需要： 
-
-`conda install [-h] [--revision REVISION] [-n ENVIRONMENT | -p PATH] 
-
-                     [-c CHANNEL] [--use-local] [--override-channels] 
-                     
-                     [--repodata-fn REPODATA_FNS] [--experimental {jlap,lock}] 
-                     
-                     [--strict-channel-priority] [--no-channel-priority] 
-                     
-                     [--no-deps | --only-deps] [--no-pin] [--copy] [-C] [-k] 
-                     
-                     [--offline] [-d] [--json] [-q] [-v] [-y] 
-                     
-                     [--download-only] [--show-channel-urls] [--file FILE] 
-                     
-                     [--solver {classic} | --experimental-solver {classic}] 
-                     
-                     [--force-reinstall] 
-                     
-                     [--freeze-installed | --update-deps | -S | --update-all | --update-specs] 
-                     
-                     [-m] [--clobber] [--dev] 
-                     
-                     [package_spec ...] `
-                     
-关于参数的详细讲解可以参考[这里](https://docs.conda.io/projects/conda/en/latest/commands/install.html)
+当然，和众多linux命令一样，这个安装命令可用添加参数，虽然大多数时候不需要。关于参数的详细讲解可以参考[这里](https://docs.conda.io/projects/conda/en/latest/commands/install.html)
 
 特别地，如果你拥有高级权限，你可以使用 
 
@@ -77,6 +51,7 @@ conda 是一种创建和管理虚拟环境的工具，用conda创建一个环境
 同样地，你可以用 
 
 `conda list 
+
 pip list ` 
 
 查询当前环境下安装了哪些包
@@ -94,7 +69,8 @@ pip list `
 
 或者使用如下命令，快捷管理 
 
-`conda clean -p #清理无用软件包
+`conda clean -p #清理无用软件包 
+
 conda clean -t #清理压缩包 `
 
 ## conda环境的退出和删除
@@ -109,7 +85,8 @@ conda clean -t #清理压缩包 `
 ## conda环境的管理
 你可以用如下命令查看关于服务器上的conda的信息 
 
-` conda --version #查看conda版本
+` conda --version #查看conda版本 
+
 conda config --show  #查看conda配置 `
 
 如果你发现你的服务器安装包非常慢，你可以尝试修改conda镜像站到国内的镜像 
@@ -121,10 +98,11 @@ conda config --show  #查看conda配置 `
 打开配置文件，然后将以下命令写入，替换原本的配置： 
 
 ` channels:
-https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
-https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda -forge/
-https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+  https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+  https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+  https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda -forge/
+  https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+  
 ss1_ verify: true `
 
 如果conda版本过低无法兼容某些软件，可以使用如下命令 
