@@ -51,6 +51,7 @@ conda 是一种创建和管理虚拟环境的工具，用conda创建一个环境
 同样地，你可以用 
 
 `conda list` 
+
 `pip list ` 
 
 查询当前环境下安装了哪些包
@@ -84,26 +85,25 @@ conda clean -t #清理压缩包 `
 ## conda环境的管理
 你可以用如下命令查看关于服务器上的conda的信息 
 
-` conda --version #查看conda版本 
+`conda --version #查看conda版本` 
 
-conda config --show  #查看conda配置 `
+`conda config --show  #查看conda配置 `
 
 如果你发现你的服务器安装包非常慢，你可以尝试修改conda镜像站到国内的镜像 
 
 首先 
 
-` vim ~/.condarc ` 
+`vim ~/.condarc ` 
 
 打开配置文件，然后将以下命令写入，替换原本的配置： 
-
-` channels:
+```
+channels: 
   https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
   https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
   https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda -forge/
   https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
-  
-ss1_ verify: true `
-
+ss1_ verify: true 
+```
 如果conda版本过低无法兼容某些软件，可以使用如下命令 
 
 `conda update conda ` 
