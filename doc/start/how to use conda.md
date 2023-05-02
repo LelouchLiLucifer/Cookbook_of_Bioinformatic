@@ -28,14 +28,20 @@ conda 是一种创建和管理虚拟环境的工具，用conda创建一个环境
 
 ## conda环境的启用
 要应用conda环境，首先需要将其激活：
-`conda activate 麻辣烫`
+
+`conda activate 麻辣烫` 
+
 这样我们就激活了麻辣烫环境，环境启用后，在命令提示符前会出现当前环境名
 
 ## conda装软件
 现在我们选好了，麻辣烫的口味，煮好了麻辣烫，但是。这个麻辣烫里居然连一点正经的食材都没有！我们需要现在安装几乎所有你需要的软件，用以下命令来安装软件包： 
+
 `conda install 肉丸` 
+
 这是一个基础的安装“肉丸”这个软件的命令 
+
 当然，和众多linux命令一样，这个安装命令可用添加参数，虽然大多数时候不需要： 
+
 `conda install [-h] [--revision REVISION] [-n ENVIRONMENT | -p PATH] 
                      [-c CHANNEL] [--use-local] [--override-channels] 
                      [--repodata-fn REPODATA_FNS] [--experimental {jlap,lock}] 
@@ -52,23 +58,31 @@ conda 是一种创建和管理虚拟环境的工具，用conda创建一个环境
 关于参数的详细讲解可以参考[这里](https://docs.conda.io/projects/conda/en/latest/commands/install.html)
 
 特别地，如果你拥有高级权限，你可以使用 
-`pip install 肉丸 -i https://pypi.tuna.tsinghua.edu.cn/simple `
+
+`pip install 肉丸 -i https://pypi.tuna.tsinghua.edu.cn/simple ` 
+
 其中 -i  链接后的为清华的镜像站，你可以在网上找到其他的镜像 
 
 同样地，你可以用 
+
 `conda list 
-pip list `
+pip list ` 
+
 查询当前环境下安装了哪些包
 
 **然而，在实际应用中，我们不会直接这样自己写一个命令来尝试安装。通常我们会先查阅anaconda的官网[anaconda.org](https://anaconda.org/)，它可以直接给出我们需要的包的安装命令，并且可以显示包的版本和提供者，也可以查阅相关的github项目，寻找其他的安装方式。**
 
-而如果我们需要升级某个包，我们可以重新安装或者使用如下命令
+而如果我们需要升级某个包，我们可以重新安装或者使用如下命令 
+
 `conda update 肉丸 `
 
 ## conda环境的清理
-如果我们不想要某个包可以使用如下命令删除
-`conda uninstall 肉丸 `
-或者使用如下命令，快捷管理
+如果我们不想要某个包可以使用如下命令删除 
+
+`conda uninstall 肉丸 ` 
+
+或者使用如下命令，快捷管理 
+
 `conda clean -p #清理无用软件包
 conda clean -t #清理压缩包 `
 
@@ -79,14 +93,19 @@ conda clean -t #清理压缩包 `
 删除环境
 
 ## conda环境的管理
-你可以用如下命令查看关于服务器上的conda的信息
+你可以用如下命令查看关于服务器上的conda的信息 
+
 ` conda --version #查看conda版本
 conda config --show  #查看conda配置 `
 
-如果你发现你的服务器安装包非常慢，你可以尝试修改conda镜像站到国内的镜像
-首先
+如果你发现你的服务器安装包非常慢，你可以尝试修改conda镜像站到国内的镜像 
+
+首先 
+
 ` vim ~/.condarc ` 
-打开配置文件，然后将以下命令写入，替换原本的配置：
+
+打开配置文件，然后将以下命令写入，替换原本的配置： 
+
 ` channels:
 https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
 https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
@@ -94,5 +113,6 @@ https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda -forge/
 https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
 ss1_ verify: true `
 
-如果conda版本过低无法兼容某些软件，可以使用如下命令
+如果conda版本过低无法兼容某些软件，可以使用如下命令 
+
 `conda update conda ` 
