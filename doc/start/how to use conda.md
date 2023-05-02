@@ -50,9 +50,8 @@ conda 是一种创建和管理虚拟环境的工具，用conda创建一个环境
 
 同样地，你可以用 
 
-`conda list 
-
-pip list ` 
+`conda list` 
+`pip list ` 
 
 查询当前环境下安装了哪些包
 
