@@ -69,9 +69,9 @@ conda 是一种创建和管理虚拟环境的工具，用conda创建一个环境
 
 或者使用如下命令，快捷管理 
 
-`conda clean -p #清理无用软件包 
+`conda clean -p #清理无用软件包 ` 
 
-conda clean -t #清理压缩包 `
+`conda clean -t #清理压缩包 `
 
 ## conda环境的退出和删除
 `deactivate 肉丸 ` 
