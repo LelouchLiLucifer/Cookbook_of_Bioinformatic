@@ -43,16 +43,27 @@ conda 是一种创建和管理虚拟环境的工具，用conda创建一个环境
 当然，和众多linux命令一样，这个安装命令可用添加参数，虽然大多数时候不需要： 
 
 `conda install [-h] [--revision REVISION] [-n ENVIRONMENT | -p PATH] 
+
                      [-c CHANNEL] [--use-local] [--override-channels] 
+                     
                      [--repodata-fn REPODATA_FNS] [--experimental {jlap,lock}] 
+                     
                      [--strict-channel-priority] [--no-channel-priority] 
+                     
                      [--no-deps | --only-deps] [--no-pin] [--copy] [-C] [-k] 
+                     
                      [--offline] [-d] [--json] [-q] [-v] [-y] 
+                     
                      [--download-only] [--show-channel-urls] [--file FILE] 
+                     
                      [--solver {classic} | --experimental-solver {classic}] 
+                     
                      [--force-reinstall] 
+                     
                      [--freeze-installed | --update-deps | -S | --update-all | --update-specs] 
+                     
                      [-m] [--clobber] [--dev] 
+                     
                      [package_spec ...] `
                      
 关于参数的详细讲解可以参考[这里](https://docs.conda.io/projects/conda/en/latest/commands/install.html)
@@ -88,8 +99,11 @@ conda clean -t #清理压缩包 `
 
 ## conda环境的退出和删除
 `deactivate 肉丸 ` 
-退出环境“肉丸”
+
+退出环境“肉丸” 
+
 `conda remove -n 肉丸 --all ` 
+
 删除环境
 
 ## conda环境的管理
