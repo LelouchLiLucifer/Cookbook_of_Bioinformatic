@@ -1,0 +1,98 @@
+#!/bin/bash
+## BEGIN PBS SETTINGS: Note PBS lines MUST start with #
+#PBS -l fsx_lustre=fs-04fcc83a2ff5d7932.fsx.cn-northwest-1.amazonaws.com
+#PBS -V
+#PBS -j oe
+#PBS -l instance_type=r5d.2xlarge
+#PBS -l spot_price=auto
+#PBS -l select=1:ncpus=4:ompthreads=4
+## END PBS SETTINGS
+
+# path
+
+sample=${sample}
+output_dir=annovar
+outdir=annovar
+
+ref=/apps/applications/common_data/gatk/hg38.fa
+
+# Split S3 prefix and sample dir name
+sample_fsx_path=`echo |sed "s/^/\/fsx\/CCA-output\/mutect/"`
+s3_path=`echo |sed "s/^/s3:\/\/clouddisk\/CCA-output\/annovar\//"`
+
+
+# bam path
+#bam_sorted_dedup=${sample_fsx_path}/${sample}_sorted_markdup.bam
+
+# Load environment
+module load application/annovar/2020-06-08
+module load application/gatk/4.2.2.0
+module load application/samtools/1.13
+
+# Check scratch dir exist.
+if [ ! -d /scratch ]; then
+        echo "/scratch directory does not exist, exit ..."
+        exit -1
+fi
+if [ ! -d ${sample_fsx_path} ]; then
+        echo "${sample_fsx_path} directory does not exist, exit ..."
+        exit -2
+fi
+
+cd /scratch
+mkdir ${output_dir}
+
+# Extract the SNPs from the call set
+gatk --java-options '-Xmx60g' SelectVariants -R ${ref} -V ${sample_fsx_path}/${sample}.filter.vcf.gz -select-type SNP -O ${output_dir}/${sample}.MC_calls.snps.vcf.gz
+
+# Extract the indels from the call set
+gatk --java-options '-Xmx64g' SelectVariants -R ${ref} -V ${sample_fsx_path}/${sample}.filter.vcf.gz  -select-type INDEL -O ${output_dir}/${sample}.MC_calls.indels.vcf.gz
+
+# Apply basic filters to the SNP call set
+gatk --java-options '-Xmx64g' VariantFiltration -R ${ref} -V ${output_dir}/${sample}.MC_calls.snps.vcf.gz --filter-expression "QD < 2.0" --filter-name "QD_2"  --filter-expression "FS > 60.0" --filter-name "FS_60" --filter-expression "MQ < 40.0" --filter-name "MQ_40" --filter-expression "MQRankSum < -12.5" --filter-name "MQRS_12.5" --filter-expression "ReadPosRankSum < -8.0" --filter-name "RPRS_8" --filter-expression "SOR > 3.0" --filter-name "SOR_3"  -O ${output_dir}/${sample}.MC_calls.snps.filtered.vcf.gz
+
+# Apply basic filters to the INDEL call set
+gatk --java-options '-Xmx64g' VariantFiltration -R ${ref} -V ${output_dir}/${sample}.MC_calls.indels.vcf.gz --filter-expression "QD < 2.0" --filter-name "QD_2" --filter-expression "FS > 200.0" --filter-name "FS_200" --filter-expression "ReadPosRankSum < -20.0" --filter-name "RPRS_20"  -O ${output_dir}/${sample}.MC_calls.indels.filtered.vcf.gz
+
+# Merge filtered SNP and INDEL vcfs back together
+gatk --java-options '-Xmx64g' MergeVcfs -I ${output_dir}/${sample}.MC_calls.snps.filtered.vcf.gz -I ${output_dir}/${sample}.MC_calls.indels.filtered.vcf.gz -O ${output_dir}/${sample}.MC_calls.filtered.vcf.gz
+
+# Extract PASS variants only
+gatk --java-options '-Xmx64g' SelectVariants -R ${ref} -V ${output_dir}/${sample}.MC_calls.filtered.vcf.gz -O ${output_dir}/${sample}.MC_calls.filtered.PASS.vcf.gz  --exclude-filtered
+#ls -l ${output_dir}/
+echo `date` : hard-filter finished ...
+
+rm -r ${output_dir}/${sample}.MC_calls.snps.vcf.gz  ${output_dir}/${sample}.MC_calls.snps.vcf.gz.tbi ${output_dir}/${sample}.MC_calls.indels.vcf.gz ${output_dir}/${sample}.MC_calls.indels.vcf.gz.tbi ${output_dir}/${sample}.MC_calls.snps.filtered.vcf.gz ${output_dir}/${sample}.MC_calls.snps.filtered.vcf.gz.tbi ${output_dir}/${sample}.MC_calls.indels.filtered.vcf.gz ${output_dir}/${sample}.MC_calls.indels.filtered.vcf.gz.tbi ${output_dir}/${sample}.MC_calls.filtered.vcf.gz ${output_dir}/${sample}.MC_calls.filtered.vcf.gz.tbi
+
+echo `date` : start annovar ...
+
+/apps/applications/annovar/annovar/table_annovar.pl ${output_dir}/${sample}.MC_calls.filtered.PASS.vcf.gz  /apps/applications/annovar/annovar/humandb -buildver hg38 -out ${output_dir}/${sample}.somatic.SNP -remove -protocol refGene,SAS.sites.2015_08,exac03,esp6500siv2_all,EAS.sites.2015_08,dbnsfp42a,cosmic70,clinvar_20200316,avsnp150,ALL.sites.2015_08,1000g2015aug_all -operation g,f,f,f,f,f,f,f,f,f,f -nastring . -vcfinput -polish
+
+echo `date` : ... end annovar
+echo `date` : start annovar_filter ...
+
+awk -F '\t' '$147 == "Otherinfo10" || $147 == "PASS" {print}' ${output_dir}/${sample}.somatic.SNP.hg38_multianno.txt > ${output_dir}/${sample}.SNP-01.txt
+awk -F '\t' '$12 == "ExAC_ALL" || $12<=0.01 {print}'  ${outdir}/${sample}.SNP-01.txt >${output_dir}/${sample}.SNP-02.txt
+awk -F '\t' '$137 == "1000g2015aug_all" || $137<=0.01 {print}' ${outdir}/${sample}.SNP-02.txt >${outdir}/${sample}.SNP-03.txt
+awk -F '\t' '$20 == "esp6500siv2_all" || $20<=0.01 {print}' ${outdir}/${sample}.SNP-03.txt >${outdir}/${sample}.SNP-04.txt
+awk -F '\t' '$21 == "EAS.sites.2015_08" || $21<=0.01 {print}' ${outdir}/${sample}.SNP-04.txt > ${outdir}/${sample}.SNP-05.txt
+awk -F '\t' '$136 == "ALL.sites.2015_08" || $136<=0.01 {print}' ${outdir}/${sample}.SNP-05.txt >${outdir}/${sample}.SNP.txt
+ ##胆管癌过滤文章里写的是保留AF < 0.1
+awk -F '\t' '{print$NF}' ${outdir}/${sample}.SNP.txt >${outdir}/${sample}.SNP-06-NF.txt
+awk -F '[,:]' '{print$4}'  ${outdir}/${sample}.SNP-06-NF.txt >   ${outdir}/${sample}.SNP-06-NF-01.txt
+cat -n ${outdir}/${sample}.SNP-06-NF-01.txt > ${outdir}/${sample}.SNP-06-NF-02.txt
+awk -F '\t' '$1==1 || $NF < 0.1  {print}' ${outdir}/${sample}.SNP-06-NF-02.txt > ${outdir}/${sample}.SNP-06-NF-03.txt
+awk -F '\t' '{print$1}' ${outdir}/${sample}.SNP-06-NF-03.txt > ${outdir}/${sample}.line
+cat ${outdir}/${sample}.line | while read i; do nl ${outdir}/${sample}.SNP-06.txt |sed -n "$i"p >> ${outdir}/${sample}.SNP.filter-AF0.1-pre.txt; done
+cut -f2-152 ${outdir}/${sample}.SNP.filter-AF0.1-pre.txt > ${outdir}/${sample}.SNP.filter-AF0.1.txt
+ls -l annovar/
+#cut -f3-153
+rm -rf ${outdir}/${sample}.SNP-01.txt ${outdir}/${sample}.SNP-02.txt ${outdir}/${sample}.SNP-03.txt ${outdir}/${sample}.SNP-04.txt ${outdir}/${sample}.SNP-05.txt ${outdir}/${sample}.SNP-06-NF.txt ${outdir}/${sample}.SNP-06-NF-01.txt ${outdir}/${sample}.SNP-06-NF-02.txt ${outdir}/${sample}.SNP-06-NF-03.txt ${outdir}/${sample}.line ${outdir}/${sample}.SNP.filter-AF0.1-pre.txt
+echo `date` : ... end annovar_filter ...
+# Sync output back to S3
+ls -l ${output_dir}/
+echo `date` : start upload to s3 ...
+aws s3 sync ${output_dir}  ${s3_path}
+echo `date` : ... end upload to s3
+
+
