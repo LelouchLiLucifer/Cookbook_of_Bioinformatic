@@ -14,3 +14,12 @@ https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/latest/
 https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/latest/hg38.fa.gz
 https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/latest/md5sum.txt
 ```
+BGGBlup
+https://www.zhihu.com/question/38795951
+https://www.zhihu.com/question/23952373
+EBV值
+REML
+物种血源远近计算
+数据预处理模块的优势
+https://www.jianshu.com/p/c397f62a8d0d
+https://blog.csdn.net/qingtianhaoshuai/article/details/124222008
