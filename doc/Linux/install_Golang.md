@@ -1,9 +1,9 @@
 **Debian系系统安装最新版Golang**<br>
-使用apt install也能装golang，但大多数源都是旧版本，会出现很多问题，所以建议从官方下载<br>
+使用命令`apt install golang-go`也能装golang，但大多数源都是旧版本，会出现很多问题，所以建议从官方下载<br>
 最新版可以从官网获取到https://golang.google.cn/dl/<br>
 从Featured downloads中挑一下操作系统对应的即可,不要去下载Source，那是源码<br>
 ```
-wget https://golang.google.cn/dl/go1.19.1.linux-amd64.tar.gz
+wget https://golang.google.cn/dl/go1.20.4.linux-amd64.tar.gz
 tar -xvf go1.19.1.linux-amd64.tar.gz
 mv go /usr/local/
 ```
