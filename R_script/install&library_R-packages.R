@@ -33,3 +33,7 @@ packages = c("包名1","包名2","包名3"..."包名n")
 install.packages(packages)
 #载入多个R包
 inst = lapply(packages,library,character.only = TRUE)
+#安装R包以及依赖项
+#一些R包有外部依赖(比如可能调用了R以外的库)。在类UNIX系统(比如最常见的Linux系统)中，最好的方案是在操作系统层面进行安装，不要使用install.packages。这样可以实现在保证了R包安装的同时，其必须依赖的包也得以安装和正确的设置。
+#以Ubuntu为例，我们可以在"https://cran.r-project.org/bin/linux/ubuntu/fullREADME.html"下看到详细的有关"Ubuntu Packages for R"的说明:Ubuntu 存储库中提供了许多名称以 r-cran- 开头的 R 包
+
